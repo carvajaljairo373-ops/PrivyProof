@@ -1,6 +1,6 @@
 [build]
-  command = "cd ../../ && pnpm install && cd packages/react-showcase && pnpm run build"
-  publish = "build"
+  command = "pnpm install && pnpm --filter react-showcase run build"
+  publish = "packages/react-showcase/build"
 
 [build.environment]
   NODE_VERSION = "18"

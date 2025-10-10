@@ -1,6 +1,6 @@
 [build]
-  command = "cd ../../ && pnpm install && cd packages/vue-showcase && pnpm run build"
-  publish = "dist"
+  command = "pnpm install && pnpm --filter vue-showcase run build"
+  publish = "packages/vue-showcase/dist"
 
 [build.environment]
   NODE_VERSION = "18"

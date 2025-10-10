@@ -1,6 +1,6 @@
 [build]
-  command = "cd ../../ && pnpm install && cd packages/nextjs-showcase && pnpm run build"
-  publish = ".next"
+  command = "pnpm install && pnpm --filter nextjs-showcase run build"
+  publish = "packages/nextjs-showcase/.next"
 
 [build.environment]
   NODE_VERSION = "18"
