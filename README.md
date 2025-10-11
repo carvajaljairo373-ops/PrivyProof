@@ -31,6 +31,32 @@ fhevm-react-template/
 
 ## 🚀 **Quick Start**
 
+### **Option 1: NPX Packages (Recommended)**
+Create a new FHEVM project instantly with our NPX packages:
+
+```bash
+# React
+npx create-fhevm-react my-app
+cd my-app
+npm install
+npm start
+
+# Next.js
+npx create-fhevm-nextjs my-app
+cd my-app
+npm install
+npm run dev
+
+# Vue 
+npx create-fhevm-vue my-app
+cd my-app
+npm install
+npm run dev
+```
+
+### **Option 2: Development Environment**
+Clone and run the full development environment:
+
 ### **1. Install Dependencies**
 ```bash
 pnpm install
@@ -211,6 +237,51 @@ pnpm deploy
   - `increment()` - Increments encrypted count
   - `decrement()` - Decrements encrypted count
 - **Public Data:** Encrypted count and sum for public decryption
+
+## 📦 **NPX Packages**
+
+We've created NPX packages that let you create FHEVM applications instantly:
+
+### **⚛️ React NPX Package**
+```bash
+npx create-fhevm-react my-app
+cd my-app
+npm install
+npm start
+```
+- **Package:** [create-fhevm-react](https://www.npmjs.com/package/create-fhevm-react)
+- **Features:** Complete React app with FHEVM SDK, beautiful UI, deployed contract
+- **Tech:** React 18, TypeScript, Create React App, Tailwind CSS
+
+### **🚀 Next.js NPX Package**
+```bash
+npx create-fhevm-nextjs my-app
+cd my-app
+npm install
+npm run dev
+```
+- **Package:** [create-fhevm-nextjs](https://www.npmjs.com/package/create-fhevm-nextjs)
+- **Features:** Complete Next.js app with FHEVM SDK, beautiful UI, deployed contract
+- **Tech:** Next.js 15, TypeScript, App Router, Tailwind CSS
+
+### **💚 Vue NPX Package**
+```bash
+npx create-fhevm-vue my-app
+cd my-app
+npm install
+npm run dev
+```
+- **Package:** [create-fhevm-vue](https://www.npmjs.com/package/create-fhevm-vue)
+- **Features:** Complete Vue app with FHEVM SDK, beautiful UI, deployed contract
+- **Tech:** Vue 3, TypeScript, Vite, Tailwind CSS
+
+### **What Each NPX Package Includes:**
+- ✅ **Bundled FHEVM SDK** - No external dependencies
+- ✅ **Deployed FHE Counter Contract** - Live on Sepolia testnet
+- ✅ **Beautiful Zama UI** - Professional design system
+- ✅ **Universal FHEVM SDK** - Complete utilities for FHE operations
+- ✅ **TypeScript Support** - Full type safety
+- ✅ **Production Ready** - Optimized for deployment
 
 ## 🎯 **Framework Examples**
 
