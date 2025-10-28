@@ -44,12 +44,13 @@ async function initializeNodeFheInstance(rpcUrl?: string) {
   try {
     console.log('🚀 Initializing REAL FHEVM Node.js instance...');
     
-    // Import the RelayerSDK with correct Node.js path
-    const { createInstance, SepoliaConfig, generateKeypair } = await import('@zama-fhe/relayer-sdk/node');
+    // Use eval to prevent webpack from analyzing these imports
+    const relayerSDKModule = await eval('import("@zama-fhe/relayer-sdk/node")');
+    const { createInstance, SepoliaConfig, generateKeypair } = relayerSDKModule;
     
     // Create an EIP-1193 compatible provider for Node.js
-    const { ethers } = await import('ethers');
-    const provider = new ethers.JsonRpcProvider(rpcUrl || 'https://sepolia.infura.io/v3/YOUR_INFURA_KEY');
+    const ethersModule = await eval('import("ethers")');
+    const provider = new ethersModule.ethers.JsonRpcProvider(rpcUrl || 'https://sepolia.infura.io/v3/YOUR_INFURA_KEY');
     
     // Create EIP-1193 provider wrapper
     const eip1193Provider = {
