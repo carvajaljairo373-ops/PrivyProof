@@ -8,7 +8,7 @@ import './App.css';
 // Contract configuration
 const CONTRACT_ADDRESSES = {
   31337: '0x40e8Aa088739445BC3a3727A724F56508899f65B', // Local Hardhat
-  11155111: '0xead137D42d2E6A6a30166EaEf97deBA1C3D1954e', // Sepolia
+  11155111: '0x7A14b454D19A4CB4c55E0386d04Eb0B66e6717EC', // Sepolia
 }
 
 // Sepolia network configuration

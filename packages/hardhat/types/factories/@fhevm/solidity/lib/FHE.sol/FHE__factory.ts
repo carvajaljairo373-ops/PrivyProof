@@ -20,6 +20,25 @@ const _abi = [
     name: "InvalidKMSSignatures",
     type: "error",
   },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "bytes32[]",
+        name: "handlesList",
+        type: "bytes32[]",
+      },
+      {
+        indexed: false,
+        internalType: "bytes",
+        name: "abiEncodedCleartexts",
+        type: "bytes",
+      },
+    ],
+    name: "PublicDecryptionVerified",
+    type: "event",
+  },
 ] as const;
 
 const _bytecode =

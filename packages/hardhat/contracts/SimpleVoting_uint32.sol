@@ -2,9 +2,9 @@
 pragma solidity ^0.8.24;
 
 import { FHE, externalEuint32, euint32, ebool } from "@fhevm/solidity/lib/FHE.sol";
-import { EthereumConfig } from "@fhevm/solidity/config/ZamaConfig.sol";
+import { ZamaEthereumConfig } from "@fhevm/solidity/config/ZamaConfig.sol";
 
-contract SimpleVoting_uint32 is EthereumConfig {
+contract SimpleVoting_uint32 is ZamaEthereumConfig {
     struct Session {
         address creator;
         uint256 endTime;
@@ -61,7 +61,7 @@ contract SimpleVoting_uint32 is EthereumConfig {
 
         FHE.allowThis(s.yesVotes);
         FHE.allowThis(s.noVotes);
-        // Allow creator to decrypt (for oracle/callback pattern with user decryption)
+        // Allow creator to decrypt ( with user decryption if he wishes)
         FHE.allow(s.yesVotes, s.creator);
         FHE.allow(s.noVotes, s.creator);
 
@@ -113,11 +113,8 @@ contract SimpleVoting_uint32 is EthereumConfig {
         handlesList[0] = FHE.toBytes32(s.yesVotes);
         handlesList[1] = FHE.toBytes32(s.noVotes);
 
-        // Verify the decryption proof 
-        require(
-            FHE.verifySignatures(handlesList, cleartexts, decryptionProof),
-            "Invalid decryption proof"
-        );
+        // Verify the decryption proof (reverts on failure)
+        FHE.checkSignatures(handlesList, cleartexts, decryptionProof);
 
         // Decode the results
         (uint32 revealedYes, uint32 revealedNo) = abi.decode(cleartexts, (uint32, uint32));

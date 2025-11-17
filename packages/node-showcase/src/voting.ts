@@ -6,8 +6,8 @@
 import { ethers } from 'ethers';
 import { FhevmNode } from '../../fhevm-sdk/dist/adapters/node.js';
 
-// Contract configuration (FHEVM 0.9.0)
-export const VOTING_CONTRACT_ADDRESS = '0x4D15cA56c8414CF1bEF42B63B0525aFc3751D2d1'; // Sepolia - Updated for 0.9.0
+// Contract configuration (FHEVM 0.9.1)
+export const VOTING_CONTRACT_ADDRESS = '0x4189777Eb42f68Ce959E498a171e328BfDA90C46'; // Sepolia - Updated for 0.9.1
 
 export const VOTING_CONTRACT_ABI = [
   {

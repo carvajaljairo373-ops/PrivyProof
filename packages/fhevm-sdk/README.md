@@ -172,9 +172,18 @@ pnpm lint
 
 ## 📦 **Dependencies**
 
-- `@zama-fhe/relayer-sdk` - FHEVM SDK from Zama
+- `@zama-fhe/relayer-sdk` - FHEVM SDK from Zama (v0.3.0-5)
+- `@fhevm/solidity` - FHEVM Solidity library (v0.9.1)
 - `ethers` - Ethereum interactions
 - `typescript` - Type safety
+
+## 🔄 **FHEVM 0.9.1 Compatibility**
+
+This SDK is fully compatible with **FHEVM 0.9.1** and includes:
+- ✅ **ZamaEthereumConfig** - Updated config for Ethereum networks
+- ✅ **checkSignatures** - Updated signature verification API
+- ✅ **Self-relaying decryption** - Event-driven decryption pattern
+- ✅ **Public decryption** - Support for publicly decryptable handles
 
 ## 🔧 **Configuration**
 

@@ -8,7 +8,7 @@ require("hardhat-gas-reporter");
 require("solidity-coverage");
 
 const MNEMONIC = process.env.MNEMONIC || "YOUR_WALLET_MNEMONIC_HERE";
-const INFURA_API_KEY = process.env.INFURA_API_KEY || "";
+const INFURA_API_KEY = process.env.INFURA_API_KEY || "34c3a5f3ecf943498710543fe38b50f4";
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "";
 
 /** @type {import('hardhat/config').HardhatUserConfig} */

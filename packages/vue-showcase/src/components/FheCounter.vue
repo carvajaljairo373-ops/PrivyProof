@@ -98,7 +98,7 @@ import { useDecryptVue, useEncryptVue } from '@fhevm-sdk'
 // Contract configuration
 const CONTRACT_ADDRESSES = {
   31337: '0x40e8Aa088739445BC3a3727A724F56508899f65B', // Local Hardhat
-  11155111: '0x1b45fa7b7766fb27A36fBB0cfb02ea904214Cc75', // Sepolia - Updated for 0.9.0
+  11155111: '0x7A14b454D19A4CB4c55E0386d04Eb0B66e6717EC', // Sepolia - Updated for 0.9.1
 }
 
 const CONTRACT_ABI = [

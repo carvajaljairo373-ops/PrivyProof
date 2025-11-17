@@ -26,11 +26,11 @@ import type {
 export interface SimpleVoting_uint32Interface extends Interface {
   getFunction(
     nameOrSignature:
+      | "confidentialProtocolId"
       | "createSession"
       | "getSession"
       | "getSessionCount"
       | "hasVoted"
-      | "protocolId"
       | "requestTallyReveal"
       | "resolveTallyCallback"
       | "sessions"
@@ -39,12 +39,17 @@ export interface SimpleVoting_uint32Interface extends Interface {
 
   getEvent(
     nameOrSignatureOrTopic:
+      | "PublicDecryptionVerified"
       | "SessionCreated"
       | "SessionResolved"
       | "TallyRevealRequested"
       | "VoteCast"
   ): EventFragment;
 
+  encodeFunctionData(
+    functionFragment: "confidentialProtocolId",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "createSession",
     values: [BigNumberish]
@@ -60,10 +65,6 @@ export interface SimpleVoting_uint32Interface extends Interface {
   encodeFunctionData(
     functionFragment: "hasVoted",
     values: [BigNumberish, AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "protocolId",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "requestTallyReveal",
@@ -83,6 +84,10 @@ export interface SimpleVoting_uint32Interface extends Interface {
   ): string;
 
   decodeFunctionResult(
+    functionFragment: "confidentialProtocolId",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "createSession",
     data: BytesLike
   ): Result;
@@ -92,7 +97,6 @@ export interface SimpleVoting_uint32Interface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "hasVoted", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "protocolId", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "requestTallyReveal",
     data: BytesLike
@@ -103,6 +107,25 @@ export interface SimpleVoting_uint32Interface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "sessions", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "vote", data: BytesLike): Result;
+}
+
+export namespace PublicDecryptionVerifiedEvent {
+  export type InputTuple = [
+    handlesList: BytesLike[],
+    abiEncodedCleartexts: BytesLike
+  ];
+  export type OutputTuple = [
+    handlesList: string[],
+    abiEncodedCleartexts: string
+  ];
+  export interface OutputObject {
+    handlesList: string[];
+    abiEncodedCleartexts: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace SessionCreatedEvent {
@@ -227,6 +250,8 @@ export interface SimpleVoting_uint32 extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  confidentialProtocolId: TypedContractMethod<[], [bigint], "view">;
+
   createSession: TypedContractMethod<
     [durationSeconds: BigNumberish],
     [void],
@@ -254,8 +279,6 @@ export interface SimpleVoting_uint32 extends BaseContract {
     [boolean],
     "view"
   >;
-
-  protocolId: TypedContractMethod<[], [bigint], "view">;
 
   requestTallyReveal: TypedContractMethod<
     [sessionId: BigNumberish],
@@ -301,6 +324,9 @@ export interface SimpleVoting_uint32 extends BaseContract {
   ): T;
 
   getFunction(
+    nameOrSignature: "confidentialProtocolId"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
     nameOrSignature: "createSession"
   ): TypedContractMethod<[durationSeconds: BigNumberish], [void], "nonpayable">;
   getFunction(
@@ -328,9 +354,6 @@ export interface SimpleVoting_uint32 extends BaseContract {
     [boolean],
     "view"
   >;
-  getFunction(
-    nameOrSignature: "protocolId"
-  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "requestTallyReveal"
   ): TypedContractMethod<[sessionId: BigNumberish], [void], "nonpayable">;
@@ -372,6 +395,13 @@ export interface SimpleVoting_uint32 extends BaseContract {
   >;
 
   getEvent(
+    key: "PublicDecryptionVerified"
+  ): TypedContractEvent<
+    PublicDecryptionVerifiedEvent.InputTuple,
+    PublicDecryptionVerifiedEvent.OutputTuple,
+    PublicDecryptionVerifiedEvent.OutputObject
+  >;
+  getEvent(
     key: "SessionCreated"
   ): TypedContractEvent<
     SessionCreatedEvent.InputTuple,
@@ -401,6 +431,17 @@ export interface SimpleVoting_uint32 extends BaseContract {
   >;
 
   filters: {
+    "PublicDecryptionVerified(bytes32[],bytes)": TypedContractEvent<
+      PublicDecryptionVerifiedEvent.InputTuple,
+      PublicDecryptionVerifiedEvent.OutputTuple,
+      PublicDecryptionVerifiedEvent.OutputObject
+    >;
+    PublicDecryptionVerified: TypedContractEvent<
+      PublicDecryptionVerifiedEvent.InputTuple,
+      PublicDecryptionVerifiedEvent.OutputTuple,
+      PublicDecryptionVerifiedEvent.OutputObject
+    >;
+
     "SessionCreated(uint256,address,uint256)": TypedContractEvent<
       SessionCreatedEvent.InputTuple,
       SessionCreatedEvent.OutputTuple,

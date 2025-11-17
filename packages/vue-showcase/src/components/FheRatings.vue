@@ -168,7 +168,7 @@ import { ethers } from 'ethers'
 import { useEncryptVue, useDecryptVue } from '@fhevm-sdk'
 
 // Contract configuration
-const RATINGS_CONTRACT_ADDRESS = '0x0382053b0eae2A4A45C4A668505E2030913f559e' // Sepolia - Updated for 0.9.0
+const RATINGS_CONTRACT_ADDRESS = '0xf80A030984a0AB6111B6e60973A6c16C668ede7a' // Sepolia - Updated for 0.9.1
 
 const RATINGS_CONTRACT_ABI = [
   {

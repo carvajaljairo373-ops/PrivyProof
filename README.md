@@ -19,12 +19,12 @@ All examples are running with **real FHEVM interactions** on Sepolia testnet:
 - **![Vue.js](https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vue.js&logoColor=4FC08D) Vue Showcase:** [https://vue-showcase-2780.up.railway.app/](https://vue-showcase-2780.up.railway.app/)
 - **![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white) Node.js Showcase:** [packages/node-showcase/](packages/node-showcase/)
 
-**Contract Details (FHEVM 0.9.0):**
-- **FHE Counter Contract:** `0x1b45fa7b7766fb27A36fBB0cfb02ea904214Cc75`
-- **Ratings Contract:** `0x0382053b0eae2A4A45C4A668505E2030913f559e`
-- **Voting Contract:** `0x4D15cA56c8414CF1bEF42B63B0525aFc3751D2d1`
+**Contract Details (FHEVM 0.9.1):**
+- **FHE Counter Contract:** `0x7A14b454D19A4CB4c55E0386d04Eb0B66e6717EC`
+- **Ratings Contract:** `0xf80A030984a0AB6111B6e60973A6c16C668ede7a`
+- **Voting Contract:** `0x4189777Eb42f68Ce959E498a171e328BfDA90C46`
 - **Network:** Sepolia testnet (Chain ID: 11155111)
-- **FHEVM Version:** 0.9.0
+- **FHEVM Version:** 0.9.1
 - **Relayer SDK:** 0.3.0-5
 
 ## 🌍 **Languages / Langues / 语言**
