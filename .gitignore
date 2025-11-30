@@ -1,12 +1,16 @@
 .env
+.env.local
 node_modules
 .DS_Store
 packages/*/node_modules
 packages/*/.DS_Store
 packages/*/dist
 packages/*/.env
+packages/*/.env.local
 packages/*/.turbo
 packages/*/coverage
+packages/*/.next
+packages/*/out
 tmp*
 .vscode
 

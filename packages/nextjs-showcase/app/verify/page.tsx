@@ -264,10 +264,12 @@ export default function VerifyPage() {
           <p className="text-slate-300 mb-8">
             To start the capital verification process, please connect your Web3 wallet.
           </p>
-          <ConnectButton />
+          <div className="flex justify-center mb-6">
+            <ConnectButton />
+          </div>
           <Link 
             href="/"
-            className="inline-block mt-6 text-slate-400 hover:text-white transition-colors"
+            className="inline-block text-slate-400 hover:text-white transition-colors"
           >
             ← Back to Home
           </Link>
