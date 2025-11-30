@@ -2,5 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as reviewCardsFheUint32Sol from "./ReviewCardsFHE_uint32.sol";
+export { CapitalVerification__factory } from "./CapitalVerification__factory";
 export { FHECounter__factory } from "./FHECounter__factory";
 export { SimpleVoting_uint32__factory } from "./SimpleVoting_uint32__factory";

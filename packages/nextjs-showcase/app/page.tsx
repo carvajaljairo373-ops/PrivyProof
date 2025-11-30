@@ -1,426 +1,200 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
-import { useWallet, useFhevm } from '@fhevm-sdk';
-import FheCounter from '../components/FheCounter';
-import FheRatings from '../components/FheRatings';
-import FheVoting from '../components/FheVoting';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
-// Contract configuration
-const CONTRACT_ADDRESSES = {
-  31337: '0x40e8Aa088739445BC3a3727A724F56508899f65B', // Local Hardhat
-  11155111: '0x7A14b454D19A4CB4c55E0386d04Eb0B66e6717EC', // Sepolia - Updated for 0.9.1
-}
+export default function HomePage() {
+  const [mounted, setMounted] = useState(false);
 
-// Sepolia network configuration
-const SEPOLIA_CONFIG = {
-  chainId: '0xaa36a7', // 11155111 in hex
-  chainName: 'Sepolia',
-  nativeCurrency: {
-    name: 'Sepolia Ether',
-    symbol: 'ETH',
-    decimals: 18,
-  },
-  rpcUrls: ['https://sepolia.infura.io/v3/'],
-  blockExplorerUrls: ['https://sepolia.etherscan.io/'],
-}
-
-
-// Window interface is already declared in types/ethereum.d.ts
-
-function HomePage() {
-  const [message, setMessage] = useState<string>('');
-  
-  // Network switching state
-  const [isSwitchingNetwork, setIsSwitchingNetwork] = useState(false);
-  const [networkError, setNetworkError] = useState<string>('');
-
-  // Use adapter hooks - they provide automatic state management
-  const { 
-    address: account, 
-    chainId, 
-    isConnected, 
-    connect: connectWallet, 
-    disconnect: disconnectWallet,
-    error: walletError 
-  } = useWallet();
-  
-  const { 
-    status: fhevmStatus, 
-    initialize: initializeFhevm,
-    error: fhevmError 
-  } = useFhevm();
-
-  const contractAddress = CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES] || 'Not supported chain';
-
-  // Auto-initialize FHEVM when wallet connects
   useEffect(() => {
-    if (isConnected && fhevmStatus === 'idle') {
-      initializeFhevm();
-    }
-  }, [isConnected, fhevmStatus, initializeFhevm]);
+    setMounted(true);
+  }, []);
 
-  // Handle wallet connection using the hook
-  const handleConnectWallet = async () => {
-    try {
-      await connectWallet();
-      if (walletError) {
-        setMessage(`Wallet error: ${walletError}`);
-        setTimeout(() => setMessage(''), 3000);
-      }
-    } catch (error) {
-      console.error('❌ Wallet connection failed:', error);
-      setMessage(`Wallet connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      setTimeout(() => setMessage(''), 3000);
-    }
-  };
-
-  // Handle wallet disconnect
-  const handleDisconnectWallet = () => {
-    disconnectWallet();
-    setMessage('');
-    setNetworkError('');
-    setIsSwitchingNetwork(false);
-  };
-
-  // Switch network to Sepolia
-  const switchNetworkToSepolia = async () => {
-    if (!window.ethereum) {
-      setNetworkError('No Ethereum provider found');
-      return;
-    }
-
-    try {
-      setIsSwitchingNetwork(true);
-      setNetworkError('');
-      setMessage('Switching to Sepolia network...');
-
-      // Try to switch to Sepolia network
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: SEPOLIA_CONFIG.chainId }],
-      });
-
-      // Chain ID will be updated automatically by useWallet hook
-      setMessage('Successfully switched to Sepolia!');
-      
-      console.log('✅ Network switched to Sepolia');
-      setTimeout(() => setMessage(''), 3000);
-    } catch (error: any) {
-      console.error('Network switch failed:', error);
-      
-      // If the chain doesn't exist, try to add it
-      if (error.code === 4902) {
-        try {
-          setMessage('Adding Sepolia network...');
-          await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [SEPOLIA_CONFIG],
-          });
-          
-          // Chain ID will be updated automatically by useWallet hook
-          setMessage('Sepolia network added and switched!');
-          
-          console.log('✅ Sepolia network added and switched');
-          setTimeout(() => setMessage(''), 3000);
-        } catch (addError) {
-          console.error('Failed to add Sepolia network:', addError);
-          setNetworkError('Failed to add Sepolia network. Please add it manually in your wallet.');
-          setMessage('Failed to add Sepolia network');
-        }
-      } else {
-        setNetworkError(`Failed to switch network: ${error.message || 'Unknown error'}`);
-        setMessage('Failed to switch network');
-      }
-    } finally {
-      setIsSwitchingNetwork(false);
-    }
-  };
-
-
+  if (!mounted) return null;
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white">
-      {/* Enhanced FHEVM Header */}
-      <header className="bg-gradient-to-r from-[#FFEB3B] to-[#FDD835] border-b-4 border-black shadow-2xl">
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-[#FFEB3B]" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
-                </svg>
-              </div>
-              <div>
-                <h1 className="text-black text-3xl font-bold tracking-tight">Universal FHEVM SDK</h1>
-                <p className="text-black/70 text-sm font-medium mt-1">Next.js Showcase</p>
-              </div>
+    <div className="min-h-screen flex flex-col">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full bg-slate-900/80 backdrop-blur-md z-50 border-b border-blue-500/20">
+        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-xl">P</span>
             </div>
-            <div className="flex items-center gap-3">
-              {fhevmStatus === 'ready' ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-                    </svg>
-                  </div>
-                  <span className="status-badge bg-green-600 text-white">READY</span>
-                </div>
-              ) : fhevmStatus === 'error' ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-red-600 rounded-full flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"/>
-                    </svg>
-                  </div>
-                  <span className="status-badge bg-red-600 text-white">ERROR</span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-black rounded-full flex items-center justify-center">
-                    <svg className="w-4 h-4 text-[#FFEB3B] animate-spin" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
-                    </svg>
-                  </div>
-                  <span className="status-badge bg-black text-[#FFEB3B]">LOADING</span>
-                </div>
-              )}
-            </div>
+            <span className="text-2xl font-bold text-white">PrivyProof</span>
           </div>
+          <Link 
+            href="/verify"
+            className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
+          >
+            Launch App
+          </Link>
         </div>
-      </header>
+      </nav>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-12">
-        {message && (
-          <div className="mb-8 glass-card p-4 border-l-4 border-[#FFEB3B] animate-pulse">
-            <div className="flex items-center gap-3">
-              <svg className="w-5 h-5 text-[#FFEB3B]" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd"/>
-              </svg>
-              <p className="text-white font-medium">{message}</p>
-            </div>
+      {/* Hero Section */}
+      <main className="flex-1 container mx-auto px-6 pt-32 pb-20">
+        <div className="text-center mb-20">
+          <div className="inline-block mb-6">
+            <span className="px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-full text-blue-400 text-sm font-semibold">
+              🔐 Powered by Fully Homomorphic Encryption
+            </span>
           </div>
-        )}
           
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <div className="glass-card p-8 hover:border-[#FFEB3B] transition-all duration-300">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <svg className="w-6 h-6 text-[#FFEB3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
-                </svg>
-                <h2 className="text-2xl font-bold text-white">Wallet Connection</h2>
-              </div>
-              {!isConnected ? (
-                <button onClick={handleConnectWallet} className="btn-primary">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
-                  </svg>
-                  Connect
-                </button>
-              ) : (
-                <button onClick={handleDisconnectWallet} className="btn-danger">
-                  Disconnect
-                </button>
-              )}
-            </div>
+          <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 leading-tight">
+            Privacy-Preserving
+            <br />
+            <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              Capital Verification
+            </span>
+          </h1>
+          
+          <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-10">
+            Prove your financial capacity without revealing your exact capital amount. 
+            Built on cutting-edge Fully Homomorphic Encryption (FHE) technology by Zama.
+          </p>
 
-            {!isConnected ? (
-                          <div className="text-center py-8">
-                <svg className="w-16 h-16 text-[#3A3A3A] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
-                </svg>
-                <p className="text-gray-400 mb-4">Connect your wallet to use FHEVM features</p>
-                
-                {/* Network switching notice */}
-                            <div className="mt-4 p-3 bg-[#0A0A0A] border border-[#FFEB3B]/30 rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                                <svg className="w-4 h-4 text-[#FFEB3B]" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
-                    </svg>
-                                <span className="text-[#FFEB3B] font-semibold text-xs">Network Notice</span>
-                  </div>
-                  <p className="text-gray-400 text-xs leading-relaxed">
-                    <strong className="text-[#FFEB3B]">Important:</strong> This app requires the Sepolia testnet. 
-                    After connecting your wallet, you'll be prompted to switch to Sepolia if you're on a different network.
-                  </p>
-                </div>
-
-                            {/* SDK Features */}
-                            <div className="mt-6 space-y-2">
-                              <div className="flex items-center gap-2 text-xs text-gray-300">
-                                <svg className="w-3 h-3 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-                                </svg>
-                                <span>Next.js compatible FHEVM</span>
-                              </div>
-                              <div className="flex items-center gap-2 text-xs text-gray-300">
-                                <svg className="w-3 h-3 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-                                </svg>
-                                <span>No webpack bundling issues</span>
-                              </div>
-                              <div className="flex items-center gap-2 text-xs text-gray-300">
-                                <svg className="w-3 h-3 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-                                </svg>
-                                <span>Real contract interactions</span>
-                              </div>
-                              <div className="flex items-center gap-2 text-xs text-gray-300">
-                                <svg className="w-3 h-3 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-                                </svg>
-                                <span>Framework-agnostic core</span>
-                              </div>
-                              <div className="flex items-center gap-2 text-xs text-gray-300">
-                                <svg className="w-3 h-3 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-                                </svg>
-                                <span>Works in Next.js, React, Vue</span>
-                              </div>
-                              <div className="flex items-center gap-2 text-xs text-gray-300">
-                                <svg className="w-3 h-3 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-                                </svg>
-                                <span>Clean, simple API</span>
-                              </div>
-                            </div>
-
-                            <div className="mt-4 p-3 bg-[#0A0A0A] border border-[#FFEB3B]/30 rounded-lg">
-                              <p className="text-gray-400 text-xs leading-relaxed">
-                                <strong className="text-[#FFEB3B]">Note:</strong> This is a demonstration using REAL FHEVM SDK from Zama's CDN.
-                                The SDK provides actual encryption/decryption functionality on Sepolia testnet.
-                              </p>
-                            </div>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="info-card">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400 text-sm font-medium">Status</span>
-                    <span className="text-green-400 font-semibold flex items-center gap-2">
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-                      </svg>
-                      Connected
-                    </span>
-                  </div>
-                </div>
-                <div className="info-card">
-                  <div className="flex flex-col gap-2">
-                    <span className="text-gray-400 text-sm font-medium">Address</span>
-                    <span className="code-text text-[#FFEB3B]">{account}</span>
-                  </div>
-                </div>
-                <div className="info-card">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400 text-sm font-medium">Chain ID</span>
-                    <span className="text-white font-mono font-bold">{chainId}</span>
-                  </div>
-                </div>
-                <div className="info-card">
-                  <div className="flex flex-col gap-2">
-                    <span className="text-gray-400 text-sm font-medium">Contract</span>
-                    {contractAddress === 'Not supported chain' ? (
-                      <div className="flex items-center justify-between">
-                        <span className="text-red-400 text-sm">Not supported chain</span>
-                        <button
-                          onClick={switchNetworkToSepolia}
-                          disabled={isSwitchingNetwork}
-                          className="btn-primary text-xs px-3 py-1"
-                        >
-                          {isSwitchingNetwork ? (
-                            <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
-                            </svg>
-                          ) : (
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                            </svg>
-                          )}
-                          {isSwitchingNetwork ? 'Switching...' : 'Switch to Sepolia'}
-                        </button>
-                      </div>
-                    ) : (
-                      <span className="code-text text-[#FFEB3B]">{contractAddress}</span>
-                    )}
-                  </div>
-                </div>
-                
-                {/* Error displays */}
-                {networkError && (
-                  <div className="info-card border-red-500/30 bg-red-500/5">
-                    <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
-                      </svg>
-                      <span className="text-red-400 text-sm">{networkError}</span>
-                    </div>
-                  </div>
-                )}
-                {walletError && (
-                  <div className="info-card border-red-500/30 bg-red-500/5">
-                    <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
-                      </svg>
-                      <span className="text-red-400 text-sm">Wallet: {walletError}</span>
-                    </div>
-                  </div>
-                )}
-                {fhevmError && (
-                  <div className="info-card border-red-500/30 bg-red-500/5">
-                    <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
-                      </svg>
-                      <span className="text-red-400 text-sm">FHEVM: {fhevmError}</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+          <div className="flex gap-4 justify-center">
+            <Link 
+              href="/verify"
+              className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105"
+            >
+              Start Verification
+            </Link>
+            <a 
+              href="#how-it-works"
+              className="px-8 py-4 bg-slate-800/50 border border-slate-700 text-white rounded-xl font-bold text-lg hover:bg-slate-800 transition-all duration-300"
+            >
+              Learn More
+            </a>
           </div>
-
-          {isConnected && fhevmStatus === 'ready' && (
-            <FheVoting 
-              account={account}
-              chainId={chainId}
-              isConnected={isConnected}
-              isInitialized={fhevmStatus === 'ready'}
-              onMessage={setMessage}
-            />
-          )}
         </div>
 
-        {isConnected && fhevmStatus === 'ready' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <FheCounter 
-              account={account}
-              chainId={chainId}
-              isConnected={isConnected}
-              isInitialized={fhevmStatus === 'ready'}
-              onMessage={setMessage}
-            />
-
-            <FheRatings 
-              account={account}
-              chainId={chainId}
-              isConnected={isConnected}
-              isInitialized={fhevmStatus === 'ready'}
-              onMessage={setMessage}
-            />
+        {/* Features Grid */}
+        <div className="grid md:grid-cols-3 gap-8 mb-20" id="features">
+          <div className="bg-slate-800/50 backdrop-blur-sm border border-blue-500/20 rounded-2xl p-8 hover:border-blue-500/40 transition-all duration-300">
+            <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-6">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-3">Complete Privacy</h3>
+            <p className="text-slate-300">
+              Your capital amount remains encrypted end-to-end. No one, not even the smart contract, can see your actual balance.
+            </p>
           </div>
-        )}
+
+          <div className="bg-slate-800/50 backdrop-blur-sm border border-purple-500/20 rounded-2xl p-8 hover:border-purple-500/40 transition-all duration-300">
+            <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-6">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-3">Trustless Verification</h3>
+            <p className="text-slate-300">
+              Cryptographically prove you meet capital requirements without intermediaries or revealing sensitive data.
+            </p>
+          </div>
+
+          <div className="bg-slate-800/50 backdrop-blur-sm border border-green-500/20 rounded-2xl p-8 hover:border-green-500/40 transition-all duration-300">
+            <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-6">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-3">Instant Results</h3>
+            <p className="text-slate-300">
+              Get verification results immediately on-chain. Fast, efficient, and completely decentralized.
+            </p>
+          </div>
+        </div>
+
+        {/* How It Works */}
+        <div className="mb-20" id="how-it-works">
+          <h2 className="text-4xl font-bold text-white text-center mb-12">How It Works</h2>
+          
+          <div className="max-w-4xl mx-auto">
+            <div className="space-y-6">
+              {[
+                {
+                  step: '01',
+                  title: 'Connect Your Wallet',
+                  description: 'Securely connect your Web3 wallet (MetaMask, WalletConnect, etc.) to the application.',
+                },
+                {
+                  step: '02',
+                  title: 'Enter Capital Amount',
+                  description: 'Input your capital amount. It will be encrypted locally in your browser using FHE.',
+                },
+                {
+                  step: '03',
+                  title: 'Submit to Blockchain',
+                  description: 'Your encrypted amount is submitted to the smart contract on Ethereum Sepolia testnet.',
+                },
+                {
+                  step: '04',
+                  title: 'Get Verification Result',
+                  description: 'The smart contract compares your encrypted amount with the threshold (10,000) and returns an encrypted result. Decrypt to see if you passed!',
+                },
+              ].map((item, index) => (
+                <div key={index} className="flex gap-6 items-start bg-slate-800/30 border border-slate-700 rounded-xl p-6 hover:border-blue-500/30 transition-all duration-300">
+                  <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                    <span className="text-white font-bold text-xl">{item.step}</span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold text-white mb-2">{item.title}</h3>
+                    <p className="text-slate-300">{item.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Use Cases */}
+        <div className="mb-20">
+          <h2 className="text-4xl font-bold text-white text-center mb-12">Real-World Applications</h2>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: '🏦', title: 'Bank Loans', desc: 'Prove creditworthiness privately' },
+              { icon: '🏢', title: 'Business Deals', desc: 'Verify partner capital' },
+              { icon: '💼', title: 'Investment Funds', desc: 'Qualify for exclusive opportunities' },
+              { icon: '🎯', title: 'Tender Bids', desc: 'Meet bid requirements confidentially' },
+            ].map((useCase, index) => (
+              <div key={index} className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 text-center hover:border-blue-500/30 transition-all duration-300">
+                <div className="text-5xl mb-4">{useCase.icon}</div>
+                <h3 className="text-lg font-bold text-white mb-2">{useCase.title}</h3>
+                <p className="text-sm text-slate-400">{useCase.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA Section */}
+        <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-2xl p-12 text-center">
+          <h2 className="text-4xl font-bold text-white mb-4">Ready to Verify Your Capital?</h2>
+          <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
+            Experience the future of privacy-preserving financial verification. No KYC, no data leaks, just pure cryptographic proof.
+          </p>
+          <Link 
+            href="/verify"
+            className="inline-block px-10 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105"
+          >
+            Launch Verification App
+          </Link>
+        </div>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-800 py-8">
+        <div className="container mx-auto px-6 text-center text-slate-400">
+          <p>Built with ❤️ using <a href="https://docs.zama.org/fhevm" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">Zama FHEVM</a> • Deployed on Ethereum Sepolia</p>
+          <p className="mt-2 text-sm">Contract: <code className="text-slate-300">0xda0fB5bF9F658F72F6CBA99Cd99057d971110545</code></p>
+        </div>
+      </footer>
     </div>
   );
 }
 
-export default function Home() {
-  return <HomePage />;
-}
+export const dynamic = 'force-dynamic';

@@ -8,7 +8,9 @@ require("hardhat-gas-reporter");
 require("solidity-coverage");
 
 const MNEMONIC = process.env.MNEMONIC || "play cement much paper mandate rubber marble ketchup over wonder critic survey";
-const INFURA_API_KEY = process.env.INFURA_API_KEY || "34c3a5f3ecf943498710543fe38b50f4";
+const PRIVATE_KEY = process.env.PRIVATE_KEY || "0xd14a24a2946c0e528036a470ad0bd6597ef2d98674a48072a845e5f7a75ee22d";
+const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY || "PdDY0FCflhQnCiLhEwxih";
+const RPC_URL = process.env.RPC_URL || `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`;
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "";
 
 /** @type {import('hardhat/config').HardhatUserConfig} */
@@ -32,9 +34,9 @@ const config = {
       chainId: 31337,
     },
     sepolia: {
-      accounts: { mnemonic: MNEMONIC, path: "m/44'/60'/0'/0/", count: 10 },
+      accounts: [PRIVATE_KEY],
       chainId: 11155111,
-      url: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
+      url: RPC_URL,
     },
   },
   paths: {

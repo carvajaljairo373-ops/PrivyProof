@@ -3,5 +3,6 @@
 /* eslint-disable */
 import type * as reviewCardsFheUint32Sol from "./ReviewCardsFHE_uint32.sol";
 export type { reviewCardsFheUint32Sol };
+export type { CapitalVerification } from "./CapitalVerification";
 export type { FHECounter } from "./FHECounter";
 export type { SimpleVoting_uint32 } from "./SimpleVoting_uint32";
