@@ -409,7 +409,7 @@ export default function VerifyPage() {
                 disabled={isDecrypting}
                 className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-green-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isDecrypting ? '🔓 Decrypting... (30-60s)' : '🔓 Decrypt Verification Result'}
+                {isDecrypting ? '🔓 Decrypting...' : '🔓 Decrypt Verification Result'}
               </button>
             </div>
           )}
