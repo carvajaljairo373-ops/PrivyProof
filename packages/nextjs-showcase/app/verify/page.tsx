@@ -229,9 +229,12 @@ export default function VerifyPage() {
       );
 
       const result = decryptedResults[encryptedHandle];
-      console.log('✅ Decrypted result:', result);
+      console.log('✅ Decrypted result:', result, 'type:', typeof result);
       
-      setVerificationResult(result);
+      // 转换为数字（解密结果可能是 BigInt）
+      const numericResult = Number(result);
+      console.log('✅ Numeric result:', numericResult);
+      setVerificationResult(numericResult);
       
     } catch (e: any) {
       console.error('❌ Decrypt failed:', e);

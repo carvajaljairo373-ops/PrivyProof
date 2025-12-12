@@ -22,3 +22,4 @@ const deployCapitalVerification: DeployFunction = async function (hre: HardhatRu
 export default deployCapitalVerification;
 deployCapitalVerification.tags = ["CapitalVerification"];
 
+
